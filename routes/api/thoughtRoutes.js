@@ -56,4 +56,38 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// POST /api/thoughts/:thoughtId/reactions
+router.post('/:thoughtId/reactions', async (req, res) => {
+  try {
+    const updatedThought = await Thought.findByIdAndUpdate(
+      req.params.thoughtId,
+      { $push: { reactions: req.body } },
+      { new: true, runValidators: true }
+    );
+    if (!updatedThought) {
+      return res.status(404).json({ message: 'No thought found with this ID' });
+    }
+    res.json(updatedThought);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+// DELETE /api/thoughts/:thoughtId/reactions/:reactionId
+router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
+  try {
+    const updatedThought = await Thought.findByIdAndUpdate(
+      req.params.thoughtId,
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { new: true }
+    );
+    if (!updatedThought) {
+      return res.status(404).json({ message: 'No thought found with this ID' });
+    }
+    res.json(updatedThought);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 module.exports = router;
