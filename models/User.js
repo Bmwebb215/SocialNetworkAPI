@@ -34,6 +34,9 @@ const userSchema = new Schema(
       virtuals: true,
     },
     id: false,
+  },
+  {
+    timestamps: true,
   }
 );
 
